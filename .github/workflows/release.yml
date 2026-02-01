@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        falco_version:
+          - "0.42.1"
+          - "0.43.0"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        run: |
+          TAG="${GITHUB_REF_NAME}-f${{ matrix.falco_version }}"
+          docker buildx build --build-arg FALCO_VERSION=${{ matrix.falco_version }} \
+            --tag "ghcr.io/acidghost/falco-validator:$TAG" --push .
+
+      - name: Create GitHub Release
+        if: matrix.falco_version == '0.43.0'
+        run: |
+          gh release create ${GITHUB_REF_NAME} \
+            --title "Release ${GITHUB_REF_NAME}" \
+            --notes "falco-validator Action release ${GITHUB_REF_NAME}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
