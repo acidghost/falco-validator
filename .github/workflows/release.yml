@@ -45,7 +45,7 @@ jobs:
         if: matrix.falco_version == '0.43.0'
         run: |
           gh release create ${GITHUB_REF_NAME} \
-            --title "Release ${GITHUB_REF_NAME}" \
+            --title "${GITHUB_REF_NAME}" \
             --notes "falco-validator Action release ${GITHUB_REF_NAME}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
