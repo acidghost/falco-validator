@@ -30,18 +30,16 @@ jobs:
 
       - uses: acidghost/falco-validator@v1.0.0
         with:
-          falco_version: "0.43.0"
           rules: "k8saudit-rules ./my-rules.yaml"
           stable: "true"
 ```
 
 #### Inputs
 
-| Input           | Required | Default  | Description                                                                      |
-| --------------- | -------- | -------- | -------------------------------------------------------------------------------- |
-| `falco_version` | Yes      | `0.43.0` | Falco version to use for validation (determines container image tag)             |
-| `rules`         | Yes      | -        | Space-separated list of rules to validate (mix of artifact names and file paths) |
-| `stable`        | No       | `false`  | Inject Falco stable ruleset                                                      |
+| Input    | Required | Default | Description                                                                      |
+| -------- | -------- | ------- | -------------------------------------------------------------------------------- |
+| `rules`  | Yes      | -       | Space-separated list of rules to validate (mix of artifact names and file paths) |
+| `stable` | No       | `false` | Inject Falco stable ruleset                                                      |
 
 #### Examples
 
@@ -50,7 +48,6 @@ Validate multiple artifacts:
 ```yaml
 - uses: acidghost/falco-validator@v1.0.0
   with:
-    falco_version: "0.43.0"
     rules: "k8saudit-rules cloudtrail-rules"
 ```
 
@@ -59,7 +56,6 @@ Validate local files:
 ```yaml
 - uses: acidghost/falco-validator@v1.0.0
   with:
-    falco_version: "0.43.0"
     rules: "./rules.yaml ./overrides.yaml"
 ```
 
@@ -68,7 +64,6 @@ Mix artifacts and files:
 ```yaml
 - uses: acidghost/falco-validator@v1.0.0
   with:
-    falco_version: "0.43.0"
     rules: "/etc/falco/falco_rules.yaml k8saudit-rules ./my-overrides.yaml"
     stable: "true"
 ```
@@ -80,7 +75,7 @@ Use the pre-built container image directly with Docker or Podman.
 #### Pull the Image
 
 ```bash
-docker pull ghcr.io/acidghost/falco-validator:v1.0.0-f0.43.0
+docker pull ghcr.io/acidghost/falco-validator:v1.0.0
 ```
 
 #### Run Validation
@@ -88,18 +83,9 @@ docker pull ghcr.io/acidghost/falco-validator:v1.0.0-f0.43.0
 ```bash
 docker run --rm \
   -v ./my-rules.yaml:/rules.yaml:ro \
-  ghcr.io/acidghost/falco-validator:v1.0.0-f0.43.0 \
+  ghcr.io/acidghost/falco-validator:v1.0.0 \
   k8saudit-rules /rules.yaml
 ```
-
-### Available Falco Versions
-
-Images are available for multiple Falco versions:
-
-| Falco Version | Image Tag                                          |
-| ------------- | -------------------------------------------------- |
-| 0.42.1        | `ghcr.io/acidghost/falco-validator:v1.0.0-f0.42.1` |
-| 0.43.0        | `ghcr.io/acidghost/falco-validator:v1.0.0-f0.43.0` |
 
 ### Build from Source
 

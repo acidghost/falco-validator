@@ -1,5 +1,4 @@
-ARG FALCO_VERSION=0.43.0
-FROM docker.io/falcosecurity/falco:$FALCO_VERSION AS falco
+FROM docker.io/falcosecurity/falco:0.43.0 AS falco
 COPY --from=docker.io/falcosecurity/falcoctl:0.12.2 /bin/falcoctl /usr/bin/falcoctl
 
 FROM docker.io/library/golang:1.25-alpine AS builder

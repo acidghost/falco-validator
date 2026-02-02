@@ -2,10 +2,6 @@ name: "falco-validator"
 description: "Validates Falco rules using falco-validator container image"
 
 inputs:
-  falco_version:
-    description: "Falco version to use for validation (determines container image tag)"
-    required: true
-    default: "0.43.0"
   rules:
     description: "Space-separated list of rules to validate (mix of artifact names and file paths)"
     required: true
@@ -16,7 +12,7 @@ inputs:
 
 runs:
   using: "docker"
-  image: "ghcr.io/acidghost/falco-validator:v1.0.0-f${{ inputs.falco_version }}"
+  image: "ghcr.io/acidghost/falco-validator:v1.0.0"
   env:
     FALCO_VALIDATOR_RULES: ${{ inputs.rules }}
     FALCO_VALIDATOR_STABLE: ${{ inputs.stable }}

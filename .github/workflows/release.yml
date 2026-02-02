@@ -12,11 +12,6 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        falco_version:
-          - "0.42.1"
-          - "0.43.0"
 
     steps:
       - name: Checkout code
@@ -37,12 +32,9 @@ jobs:
 
       - name: Build and push image
         run: |
-          TAG="${GITHUB_REF_NAME}-f${{ matrix.falco_version }}"
-          docker buildx build --build-arg FALCO_VERSION=${{ matrix.falco_version }} \
-            --tag "ghcr.io/acidghost/falco-validator:$TAG" --push .
+          docker buildx build --tag "ghcr.io/acidghost/falco-validator:$GITHUB_REF_NAME" --push .
 
       - name: Create GitHub Release
-        if: matrix.falco_version == '0.43.0'
         run: |
           gh release create ${GITHUB_REF_NAME} \
             --title "${GITHUB_REF_NAME}" \
